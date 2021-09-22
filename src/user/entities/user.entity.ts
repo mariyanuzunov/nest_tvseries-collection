@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { IMovie } from 'src/shared/interfaces/movie.interface';
 
 export type UserDocument = User & Document;
 
@@ -10,6 +11,9 @@ export class User {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ default: [] })
+  favorites: IMovie[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

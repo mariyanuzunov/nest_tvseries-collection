@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { MoviesModule } from './movies/movies.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RatingsModule } from './ratings/ratings.module';
     FavoritesModule,
     MoviesModule,
     RatingsModule,
+    NotesModule,
   ],
   controllers: [AppController],
 })

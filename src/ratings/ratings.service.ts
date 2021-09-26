@@ -9,12 +9,18 @@ export class RatingsService {
     @InjectModel(Rating.name) private ratingModel: Model<RatingDocument>,
   ) {}
 
-  async addRating(userId: string, movieId: number, rating: number) {
-    const rec = new this.ratingModel({ userId, movieId, rating });
-    return await rec.save();
+  async getUserRating(userId: string, movieId: string) {
+    return this.ratingModel.findOne({ $and: [{ userId, movieId }] }).exec();
   }
 
-  async removeRating(ratingId: string) {
-    return await this.ratingModel.findByIdAndDelete(ratingId).exec();
+  async createUserRating(userId: string, movieId: string, rating: number) {
+    const filter = { $and: [{ userId, movieId }] };
+    const update = { rating };
+    const options = {
+      new: true,
+      upsert: true,
+    };
+
+    return this.ratingModel.findOneAndUpdate(filter, update, options).exec();
   }
 }

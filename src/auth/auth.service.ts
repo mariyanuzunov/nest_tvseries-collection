@@ -13,18 +13,24 @@ export class AuthService {
   ) {}
 
   async login(user: UserDocument) {
-    const payload = { username: user.username, sub: user._id };
-    return { userId: user._id, accessToken: this.jwtService.sign(payload) };
+    const { _id, username } = user;
+    return this.composeRespone(_id, username);
   }
 
   async register(userData: CredentialsDto) {
     try {
       userData.password = await bcrypt.hash(userData.password, 10);
-      return await this.userService.create(userData);
+      const { _id, username } = await this.userService.createUser(userData);
+      return this.composeRespone(_id, username);
     } catch (error) {
       console.error(error);
       throw new BadRequestException();
     }
+  }
+
+  async getProfile(userId: string) {
+    const { _id, username } = await this.userService.getUserById(userId);
+    return this.composeRespone(_id, username);
   }
 
   async validateUser(
@@ -46,5 +52,14 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  composeRespone(_id: string, username: string) {
+    const payload = { username, sub: _id };
+    return {
+      _id,
+      username,
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }

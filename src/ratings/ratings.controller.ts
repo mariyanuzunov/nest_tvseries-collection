@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
+  Get,
   NotFoundException,
   Param,
   Post,
@@ -21,25 +21,30 @@ export class RatingsController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getUserRating(@Req() req, @Param('id') movieId: string) {
+    const record = await this.ratingsService.getUserRating(
+      req.user._id,
+      movieId,
+    );
+
+    return { rating: record?.rating };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Req() req, @Body() data: CreateRatingDto) {
+  async createUserRating(@Req() req, @Body() data: CreateRatingDto) {
     try {
-      await this.moviesService.getOneById(data.movieId.toString());
+      await this.moviesService.getOneById(data.movieId);
     } catch (error) {
       console.error(error);
-      throw new NotFoundException();
+      throw new NotFoundException('TV Series Not Found');
     }
 
-    return this.ratingsService.addRating(
+    return this.ratingsService.createUserRating(
       req.user._id,
       data.movieId,
       data.rating,
     );
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ratingsService.removeRating(id);
   }
 }

@@ -18,19 +18,21 @@ export class FavoritesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto) {
-    return this.favoritesService.create(createFavoriteDto);
+  addOne(@Req() req, @Body() createFavoriteDto: CreateFavoriteDto) {
+    const userId = req.user._id;
+    const { itemId } = createFavoriteDto;
+    return this.favoritesService.addToFavorites(userId, itemId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Req() req) {
-    return this.favoritesService.findAll(req.user._id);
+  getAll(@Req() req) {
+    return this.favoritesService.getUserFavorites(req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') movieId: string, @Req() req) {
-    return this.favoritesService.remove(req.user._id, movieId);
+  deleteOne(@Param('id') itemId: string, @Req() req) {
+    return this.favoritesService.deleteFromFavorites(req.user._id, itemId);
   }
 }

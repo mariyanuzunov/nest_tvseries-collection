@@ -9,7 +9,7 @@ export class Rating {
   userId: string;
 
   @Prop({ required: true })
-  movieId: number;
+  movieId: string;
 
   @Prop({ required: true })
   rating: number;

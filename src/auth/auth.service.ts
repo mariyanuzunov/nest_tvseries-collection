@@ -43,9 +43,11 @@ export class AuthService {
 
       const isValid = await bcrypt.compare(credentials.password, user.password);
 
-      if (user && isValid) {
-        return user;
+      if (!user || !isValid) {
+        throw new Error();
       }
+
+      return user;
     } catch (error) {
       console.error(error);
       throw new BadRequestException('Invalid username or password.');
@@ -57,9 +59,11 @@ export class AuthService {
   composeRespone(_id: string, username: string) {
     const payload = { username, sub: _id };
     return {
-      _id,
-      username,
-      accessToken: this.jwtService.sign(payload),
+      user: {
+        _id,
+        username,
+      },
+      token: this.jwtService.sign(payload),
     };
   }
 }

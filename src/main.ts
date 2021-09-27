@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as helmet from 'helmet';
 import {
   SwaggerModule,
   DocumentBuilder,
@@ -9,6 +10,15 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.use(helmet());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      disableErrorMessages: false,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('TV Series API')
@@ -26,13 +36,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api', app, document, customOptions);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      disableErrorMessages: false,
-    }),
-  );
   await app.listen(5000);
 }
 bootstrap();

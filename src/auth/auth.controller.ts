@@ -21,23 +21,13 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Req() req) {
-    try {
-      return await this.authService.login(req.user);
-    } catch (error) {
-      console.error(error);
-      throw new BadRequestException();
-    }
+  login(@Req() req) {
+    return this.authService.login(req.user);
   }
 
   @Post('/register')
   async register(@Body(ValidationPipe) userData: CredentialsDto) {
-    try {
-      return await this.authService.register(userData);
-    } catch (error) {
-      console.error(error);
-      throw new BadRequestException();
-    }
+    return this.authService.register(userData);
   }
 
   @UseGuards(JwtAuthGuard)

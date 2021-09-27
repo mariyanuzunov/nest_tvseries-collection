@@ -50,10 +50,8 @@ export class AuthService {
       return user;
     } catch (error) {
       console.error(error);
-      throw new BadRequestException('Invalid username or password.');
+      throw new BadRequestException('Invalid username or password!');
     }
-
-    return null;
   }
 
   composeRespone(_id: string, username: string) {

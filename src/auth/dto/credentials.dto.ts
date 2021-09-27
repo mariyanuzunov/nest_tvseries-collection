@@ -1,9 +1,17 @@
 import { Transform } from 'class-transformer';
-import { MinLength } from 'class-validator';
+import { IsAlphanumeric, MinLength } from 'class-validator';
 
 export class CredentialsDto {
-  @Transform(({ value }) => value.trim())
-  @MinLength(3, { message: 'Username must be at least 3 characters long.' })
+  @Transform(({ value }) => {
+    console.log(value);
+    value = value.trim();
+    console.log(value + 'l');
+    return value;
+  })
+  @MinLength(3, { message: 'The username must be at least 3 characters long!' })
+  @IsAlphanumeric('en-US', {
+    message: 'The username must contain only letters and numbers!',
+  })
   username: string;
 
   @Transform(({ value }) => value.trim())
